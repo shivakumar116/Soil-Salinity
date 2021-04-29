@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "674862908960",
+    "project_id": "soil-salinity",
+    "storage_bucket": "soil-salinity.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:674862908960:android:5bcf3fa2744a20e7e91e45",
+        "android_client_info": {
+          "package_name": "com.example.Soil_Salinity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "674862908960-h6m512te8s4g41o7hefh9dtd885ga15k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADcpdZp1xJrOxeVm8cNyrYoqnWexuXNM4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "674862908960-h6m512te8s4g41o7hefh9dtd885ga15k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
