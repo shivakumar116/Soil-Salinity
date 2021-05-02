@@ -34,7 +34,7 @@ class _FarmerHomeState extends State<FarmerHome> {
 
     DocumentSnapshot doc = await Firestore.instance
         .collection("Sensor Values")
-        .document("device1")
+        .document("1")
         .get();
     temp = doc.data['temp'].toString();
     moisture = doc.data['moisture'].toString();
@@ -44,11 +44,6 @@ class _FarmerHomeState extends State<FarmerHome> {
   }
 
   static Future<List> calculate() async {
-    if (int.parse(moisture) > 500) {
-      moisture = "1";
-    } else {
-      moisture = "0";
-    }
     ec > 20 ? ec = 20 : ec = ec;
 
     if (int.parse(temp) > 35) {
@@ -79,9 +74,8 @@ class _FarmerHomeState extends State<FarmerHome> {
             }));
 
     if (res.statusCode == 200) {
-      List<dynamic> body = jsonDecode(res.body);
-      print(
-          body); // complete by parsing the json body return into ExampleData object and return
+      print(res
+          .body); // complete by parsing the json body return into ExampleData object and return
       //.................
 
     } else {

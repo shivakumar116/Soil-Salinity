@@ -71,6 +71,7 @@ class _AdminHomeState extends State<AdminHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Center(child: Text("")),
         backgroundColor: Colors.black,
         actions: [
