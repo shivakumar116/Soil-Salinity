@@ -1,6 +1,8 @@
 import 'dart:ui';
 
+import 'package:Soil_Salinity/profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -24,6 +26,8 @@ class _FarmerHomeState extends State<FarmerHome> {
   String temperature;
   String growth_stage;
   String ans;
+  String username;
+  final firebase_auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -33,7 +37,7 @@ class _FarmerHomeState extends State<FarmerHome> {
 
   retriveValues() async {
     setState(() {
-      isMainLoading = true;
+      this.isMainLoading = true;
     });
 
     DocumentSnapshot doc = await Firestore.instance
@@ -43,8 +47,14 @@ class _FarmerHomeState extends State<FarmerHome> {
     temperature = doc.data['temp'].toString();
     temp = doc.data['temp'].toString();
     moisture = doc.data['moisture'].toString();
+
+    final FirebaseUser user = await firebase_auth.currentUser();
+    DocumentSnapshot userdata =
+        await Firestore.instance.collection("users").document(user.uid).get();
+    username = userdata.data['name'];
+
     setState(() {
-      isMainLoading = false;
+      this.isMainLoading = false;
     });
   }
 
@@ -124,7 +134,7 @@ class _FarmerHomeState extends State<FarmerHome> {
               child: Scaffold(
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
-                  backgroundColor: Colors.green,
+                  backgroundColor: Color.fromRGBO(83, 131, 150, 1),
                   title: Text(" "),
                 ),
                 body: Center(
@@ -138,20 +148,104 @@ class _FarmerHomeState extends State<FarmerHome> {
                 return new Future(() => false);
               },
               child: Scaffold(
-                  appBar: AppBar(
-                    title: Center(child: Text("")),
-                    backgroundColor: Colors.green,
-                    automaticallyImplyLeading: false,
-                    actions: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 20),
-                        child: Icon(
-                          Icons.person_sharp,
-                          color: Colors.white,
-                          size: 25,
+                  drawer: Drawer(
+                    child: ListView(
+                      padding: EdgeInsets.zero,
+                      children: <Widget>[
+                        Container(
+                          height: 185,
+                          child: DrawerHeader(
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    radius: 28,
+                                    child: IconButton(
+                                      padding: EdgeInsets.zero,
+                                      icon: Icon(
+                                        Icons.person,
+                                        size: 40,
+                                      ),
+                                      color: Color.fromRGBO(83, 131, 150, 1),
+                                      onPressed: () {},
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    username,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 24),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(83, 131, 150, 1),
+                            ),
+                          ),
                         ),
-                      )
-                    ],
+                        ListTile(
+                          leading: Icon(
+                            Icons.home_outlined,
+                            size: 32,
+                            color: Color.fromRGBO(83, 131, 150, 1),
+                          ),
+                          title: Text('Home',
+                              style: TextStyle(
+                                fontSize: 19,
+                              )),
+                          onTap: () => {Navigator.of(context).pop()},
+                        ),
+                        ListTile(
+                          leading: Icon(
+                            Icons.verified_user_outlined,
+                            size: 29,
+                            color: Color.fromRGBO(83, 131, 150, 1),
+                          ),
+                          title:
+                              Text('Profile', style: TextStyle(fontSize: 19)),
+                          onTap: () => {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Profile(),
+                              ),
+                            )
+                          },
+                        ),
+                        ListTile(
+                          leading: Icon(
+                            Icons.call,
+                            size: 29,
+                            color: Color.fromRGBO(83, 131, 150, 1),
+                          ),
+                          title: Text('Contact Us',
+                              style: TextStyle(fontSize: 19)),
+                          onTap: () => {Navigator.of(context).pop()},
+                        ),
+                        ListTile(
+                          leading: Icon(
+                            Icons.exit_to_app,
+                            size: 29,
+                            color: Color.fromRGBO(83, 131, 150, 1),
+                          ),
+                          title: Text('Logout', style: TextStyle(fontSize: 19)),
+                          onTap: () => {Navigator.of(context).pop()},
+                        ),
+                      ],
+                    ),
+                  ),
+                  appBar: AppBar(
+                    //  title: Center(child: Text("")),
+                    backgroundColor: Color.fromRGBO(83, 131, 150, 1),
+
+                    //automaticallyImplyLeading: false,
                   ),
                   body: SingleChildScrollView(
                     child: Column(
@@ -160,7 +254,7 @@ class _FarmerHomeState extends State<FarmerHome> {
                           height: 100.0,
                           width: MediaQuery.of(context).size.width,
                           decoration: new BoxDecoration(
-                            color: Colors.green,
+                            color: Color.fromRGBO(83, 131, 150, 1),
                             boxShadow: [new BoxShadow(blurRadius: 0.0)],
                             borderRadius: new BorderRadius.vertical(
                                 bottom: new Radius.elliptical(
@@ -423,7 +517,7 @@ class _FarmerHomeState extends State<FarmerHome> {
                                 style: ButtonStyle(
                                   backgroundColor:
                                       MaterialStateProperty.all<Color>(
-                                          Colors.green),
+                                          Color.fromRGBO(83, 131, 150, 1)),
                                 ),
                                 child: Padding(
                                   padding:

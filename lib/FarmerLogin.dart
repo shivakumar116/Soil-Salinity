@@ -93,6 +93,7 @@ class _FarmerLoginState extends State<FarmerLogin> {
         appBar: AppBar(
           title: Text("Farmer Login"),
           centerTitle: true,
+          backgroundColor: Color.fromRGBO(83, 131, 150, 1),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -107,7 +108,10 @@ class _FarmerLoginState extends State<FarmerLogin> {
                   TextFormField(
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
-                      icon: Icon(Icons.email_outlined),
+                      icon: Icon(
+                        Icons.email_outlined,
+                        color: Color.fromRGBO(83, 131, 150, 1),
+                      ),
                       labelText: 'Email ',
                     ),
                     onSaved: (String value) {
@@ -128,7 +132,10 @@ class _FarmerLoginState extends State<FarmerLogin> {
                     obscureText: true,
                     cursorHeight: 25,
                     decoration: const InputDecoration(
-                      icon: Icon(Icons.lock_outline),
+                      icon: Icon(
+                        Icons.lock_outline,
+                        color: Color.fromRGBO(83, 131, 150, 1),
+                      ),
                       labelText: 'Password ',
                     ),
                     onSaved: (String value) {
@@ -150,8 +157,8 @@ class _FarmerLoginState extends State<FarmerLogin> {
                       : ElevatedButton(
                           onPressed: () => farmerlogin(context),
                           style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.blue),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Color.fromRGBO(83, 131, 150, 1)),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
