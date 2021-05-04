@@ -156,7 +156,7 @@ class _FarmerLoginState extends State<FarmerLogin> {
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                             child: Text(
-                              "Add User",
+                              "Login",
                               style: TextStyle(
                                 fontSize: 16,
                               ),

@@ -26,6 +26,7 @@ class _AddUserState extends State<AddUser> {
   var _formKey = GlobalKey<FormState>();
   bool clickedonsignup = false;
   final _auth = FirebaseAuth.instance;
+  int did;
 
   bool check() {
     final isValid = _formKey.currentState.validate();
@@ -103,6 +104,7 @@ class _AddUserState extends State<AddUser> {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Colors.black,
@@ -193,24 +195,25 @@ class _AddUserState extends State<AddUser> {
                     },
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+                    padding: const EdgeInsets.fromLTRB(10, 13, 10, 5),
                     child: DropdownButton<int>(
-                      value: device_value,
+                      hint: Text("   Assign Device         "),
+                      value: did,
                       onChanged: (int newValue) {
                         setState(() {
-                          device_value = newValue;
+                          did = newValue;
                         });
                       },
-                      items: <int>[1, 2, 3].map((int value) {
-                        return new DropdownMenuItem<int>(
+                      items: <int>[1].map<DropdownMenuItem<int>>((int value) {
+                        return DropdownMenuItem<int>(
                           value: value,
-                          child: new Text(device_value.toString()),
+                          child: Text(value.toString()),
                         );
                       }).toList(),
                     ),
                   ),
                   SizedBox(
-                    height: 35,
+                    height: 25,
                   ),
                   clickedonsignup == true
                       ? CircularProgressIndicator()

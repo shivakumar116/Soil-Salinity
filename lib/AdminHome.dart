@@ -270,7 +270,7 @@ class _AdminHomeState extends State<AdminHome> {
                               Padding(
                                 padding: EdgeInsets.fromLTRB(8, 7, 2, 10),
                                 child: Text(
-                                  "Manage Devices",
+                                  "Active Devices",
                                   style: TextStyle(
                                       fontSize: 17,
                                       fontWeight: FontWeight.bold),

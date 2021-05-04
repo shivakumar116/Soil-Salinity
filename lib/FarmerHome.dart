@@ -21,7 +21,8 @@ class _FarmerHomeState extends State<FarmerHome> {
   String growth = "Initial";
   bool isMainLoading = true;
   bool iscalLoading = false;
-
+  String temperature;
+  String growth_stage;
   String ans;
 
   @override
@@ -39,6 +40,7 @@ class _FarmerHomeState extends State<FarmerHome> {
         .collection("Sensor Values")
         .document("1")
         .get();
+    temperature = doc.data['temp'].toString();
     temp = doc.data['temp'].toString();
     moisture = doc.data['moisture'].toString();
     setState(() {
@@ -47,6 +49,11 @@ class _FarmerHomeState extends State<FarmerHome> {
   }
 
   Future<List> calculate(BuildContext ctx) async {
+    setState(() {
+      if (mounted) {
+        this.iscalLoading = true;
+      }
+    });
     ec = ec ~/ 500;
     ec > 20 ? ec = 20 : ec = ec;
     print("Ec" + ec.toString());
@@ -60,11 +67,11 @@ class _FarmerHomeState extends State<FarmerHome> {
     }
 
     if (growth == "Initial") {
-      growth = "0";
+      growth_stage = "0";
     } else if (growth == "Mid") {
-      growth = "1";
+      growth_stage = "1";
     } else {
-      growth = "2";
+      growth_stage = "2";
     }
 
     print(ec.toString());
@@ -75,13 +82,18 @@ class _FarmerHomeState extends State<FarmerHome> {
               'EC': ec,
               'Temp': temp,
               'Moisture': moisture,
-              'Growth': growth,
+              'Growth': growth_stage,
             }));
 
     if (res.statusCode == 200) {
       print(res
           .body); // complete by parsing the json body return into ExampleData object and return
       //.................
+      setState(() {
+        if (mounted) {
+          this.iscalLoading = false;
+        }
+      });
       Navigator.push(
         ctx,
         MaterialPageRoute(
@@ -93,6 +105,11 @@ class _FarmerHomeState extends State<FarmerHome> {
     } else {
       print(res.statusCode);
       print("Failed to get Data");
+      setState(() {
+        if (mounted) {
+          this.iscalLoading = false;
+        }
+      });
     }
   }
 
@@ -268,7 +285,7 @@ class _FarmerHomeState extends State<FarmerHome> {
                                           ),
                                         ),
                                         Text(
-                                          temp + "°C",
+                                          temperature + "°C",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 22),
@@ -367,9 +384,9 @@ class _FarmerHomeState extends State<FarmerHome> {
                                             });
                                           },
                                           items: <String>[
-                                            'Initial',
-                                            'Mid',
-                                            'Late',
+                                            "Initial",
+                                            "Mid",
+                                            "Late",
                                           ].map<DropdownMenuItem<String>>(
                                               (String value) {
                                             return DropdownMenuItem<String>(
@@ -399,22 +416,25 @@ class _FarmerHomeState extends State<FarmerHome> {
                         SizedBox(
                           height: 20,
                         ),
-                        ElevatedButton(
-                            onPressed: () => calculate(context),
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.green),
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                              child: Text(
-                                "Calculate",
-                                style: TextStyle(
-                                  fontSize: 22,
+                        this.iscalLoading == true
+                            ? CircularProgressIndicator()
+                            : ElevatedButton(
+                                onPressed: () => calculate(context),
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.green),
                                 ),
-                              ),
-                            ))
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                  child: Text(
+                                    "Calculate",
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                    ),
+                                  ),
+                                ))
                       ],
                     ),
                   )),

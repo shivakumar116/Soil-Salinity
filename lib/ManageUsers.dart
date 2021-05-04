@@ -80,22 +80,6 @@ class _ManageUsersState extends State<ManageUsers> {
                             ),
                           ),
                           Container(
-                            child: Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.edit_sharp),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Text("Modify"),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
                             child: GestureDetector(
                               onTap: () {
                                 showAlertDialog(BuildContext context) {
