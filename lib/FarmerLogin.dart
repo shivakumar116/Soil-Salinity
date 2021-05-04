@@ -1,17 +1,20 @@
-import 'package:Soil_Salinity/AdminHome.dart';
+import 'package:Soil_Salinity/FarmerHome.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
 
-class AdminLogin extends StatefulWidget {
-  AdminLogin({Key key}) : super(key: key);
+class FarmerLogin extends StatefulWidget {
+  FarmerLogin({Key key}) : super(key: key);
 
   @override
-  _AdminLoginState createState() => _AdminLoginState();
+  _FarmerLoginState createState() => _FarmerLoginState();
 }
 
-class _AdminLoginState extends State<AdminLogin> {
+class _FarmerLoginState extends State<FarmerLogin> {
   var _formKey = GlobalKey<FormState>();
-  bool clickedonadminlogin = false;
+
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool clickedonfarmerlogin = false;
   final _auth = FirebaseAuth.instance;
   String email;
   String password;
@@ -26,20 +29,59 @@ class _AdminLoginState extends State<AdminLogin> {
     }
   }
 
-  void login() {
-    setState(() {
-      this.clickedonadminlogin = true;
-    });
+  void farmerlogin(BuildContext context) async {
     if (check()) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => AdminHome(),
-        ),
-      );
+      setState(() {
+        this.clickedonfarmerlogin = true;
+      });
+      print(this.email + '' + this.password);
+
+      FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((value) => {
+                print(value.user.isEmailVerified),
+                if (value.user.isEmailVerified)
+                  {
+                    print(value.user.isEmailVerified),
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FarmerHome(),
+                      ),
+                    )
+                  }
+                else
+                  {
+                    FirebaseAuth.instance.signOut(),
+                    setState(() {
+                      this.clickedonfarmerlogin = false;
+                    }),
+                    Toast.show("You must verify you email...", context,
+                        duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM)
+                  }
+              })
+          .catchError((onError) {
+        setState(() {
+          this.clickedonfarmerlogin = false;
+        });
+        print(onError);
+
+        if (onError.toString().contains("ERROR_USER_NOT_FOUND")) {
+          final snackBarr = SnackBar(content: Text("User doesn't exist"));
+          _scaffoldKey.currentState.showSnackBar(snackBarr);
+          print("User Not Found");
+        } else if (onError.toString().contains("ERROR_WRONG_PASSWORD")) {
+          final snackBarr =
+              SnackBar(content: Text("Wrong or Inavlid Password"));
+          _scaffoldKey.currentState.showSnackBar(snackBarr);
+        } else {
+          final snackBarr = SnackBar(content: Text(onError.toString()));
+          _scaffoldKey.currentState.showSnackBar(snackBarr);
+        }
+      });
     } else {
       setState(() {
-        this.clickedonadminlogin = false;
+        this.clickedonfarmerlogin = false;
       });
     }
   }
@@ -49,8 +91,7 @@ class _AdminLoginState extends State<AdminLogin> {
     return Container(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Admin Login"),
-          backgroundColor: Colors.black,
+          title: Text("Farmer Login"),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
@@ -104,18 +145,18 @@ class _AdminLoginState extends State<AdminLogin> {
                   SizedBox(
                     height: 35,
                   ),
-                  clickedonadminlogin == true
+                  clickedonfarmerlogin == true
                       ? CircularProgressIndicator()
                       : ElevatedButton(
-                          onPressed: () => login(),
+                          onPressed: () => farmerlogin(context),
                           style: ButtonStyle(
                             backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.black),
+                                MaterialStateProperty.all<Color>(Colors.blue),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                             child: Text(
-                              "Login",
+                              "Add User",
                               style: TextStyle(
                                 fontSize: 16,
                               ),

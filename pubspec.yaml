@@ -29,6 +29,7 @@ dependencies:
   email_validator : ^1.0.4
   firebase_auth: ^0.14.0+5
   toast : ^0.1.5
+  percent_indicator: "^2.1.7+2"
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -1,7 +1,9 @@
 import 'dart:ui';
 
 import 'package:Soil_Salinity/AdminHome.dart';
+import 'package:Soil_Salinity/AdminLogin.dart';
 import 'package:Soil_Salinity/FarmerHome.dart';
+import 'package:Soil_Salinity/FarmerLogin.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -16,20 +18,20 @@ class _LoginPageState extends State<LoginPage> {
   @override
   adminlogin() {
     //Firestore.instance.collection("Shiva").add({'name': 'shiva'});
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AdminHome(),
+        builder: (context) => AdminLogin(),
       ),
     );
   }
 
   farmerlogin() {
     //Firestore.instance.collection("Shiva").add({'name': 'shiva'});
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => FarmerHome(),
+        builder: (context) => FarmerLogin(),
       ),
     );
   }

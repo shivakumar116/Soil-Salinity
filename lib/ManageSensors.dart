@@ -35,7 +35,8 @@ class _ManageSensorsState extends State<ManageSensors> {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(12, 15, 12, 13),
                             child: Text(
-                              "Device " + usersnapshot.data['id'].toString(),
+                              "Device " +
+                                  usersnapshot.data.documentID.toString(),
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 22,

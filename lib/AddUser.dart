@@ -56,7 +56,7 @@ class _AddUserState extends State<AddUser> {
           'phonenumber': phonenumber,
           'uid': authresult.user.uid,
           'name': name,
-          'device_id': "device1"
+          'device_id': "1"
         });
 
         authresult.user.sendEmailVerification();
