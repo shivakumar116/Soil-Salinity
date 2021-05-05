@@ -42,6 +42,8 @@ class _FarmerLoginState extends State<FarmerLogin> {
                 print(value.user.isEmailVerified),
                 if (value.user.isEmailVerified)
                   {
+                    email = "",
+                    password = "",
                     print(value.user.isEmailVerified),
                     Navigator.pushReplacement(
                       context,

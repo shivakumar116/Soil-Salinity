@@ -66,8 +66,10 @@ class _AdminLoginState extends State<AdminLogin> {
                   TextFormField(
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
-                      icon: Icon(Icons.email_outlined),
-                      labelText: 'Email ',
+                      icon: Icon(
+                        Icons.person_outlined,
+                      ),
+                      labelText: 'Username ',
                     ),
                     onSaved: (String value) {
                       // This optional block of code can be used to run
@@ -75,10 +77,10 @@ class _AdminLoginState extends State<AdminLogin> {
                       this.email = value;
                     },
                     validator: (value) {
-                      if (value.isEmpty ||
-                          !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                              .hasMatch(value)) {
-                        return 'Enter a valid email!';
+                      if (value.isEmpty) {
+                        return 'Username is required!';
+                      } else if (value != "admin11629") {
+                        return 'Invalid Username';
                       }
                       return null;
                     },
@@ -96,9 +98,10 @@ class _AdminLoginState extends State<AdminLogin> {
                       this.password = value;
                     },
                     validator: (String value) {
-                      return (value.length < 6)
-                          ? 'Password Must be >6 characters'
-                          : null;
+                      if (value != "123456") {
+                        return "Wrong Password";
+                      }
+                      return null;
                     },
                   ),
                   SizedBox(

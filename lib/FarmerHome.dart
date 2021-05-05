@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:Soil_Salinity/ContactUs.dart';
+import 'package:Soil_Salinity/LoginPage.dart';
 import 'package:Soil_Salinity/profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +11,8 @@ import 'dart:convert';
 import 'Leachingout.dart';
 import 'package:http/http.dart';
 
+final firebase_auth = FirebaseAuth.instance;
+
 class FarmerHome extends StatefulWidget {
   FarmerHome({Key key}) : super(key: key);
 
@@ -17,7 +21,7 @@ class FarmerHome extends StatefulWidget {
 }
 
 class _FarmerHomeState extends State<FarmerHome> {
-  int ec = 0;
+  int ec;
   String temp;
   String moisture;
   String growth = "Initial";
@@ -28,6 +32,7 @@ class _FarmerHomeState extends State<FarmerHome> {
   String ans;
   String username;
   final firebase_auth = FirebaseAuth.instance;
+  var _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -58,63 +63,92 @@ class _FarmerHomeState extends State<FarmerHome> {
     });
   }
 
+  bool check() {
+    final isValid = _formKey.currentState.validate();
+    if (!isValid) {
+      return false;
+    } else {
+      _formKey.currentState.save();
+      return true;
+    }
+  }
+
+  logout() async {
+    firebase_auth.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginPage(),
+      ),
+    );
+  }
+
   Future<List> calculate(BuildContext ctx) async {
     setState(() {
       if (mounted) {
         this.iscalLoading = true;
       }
     });
-    ec = ec ~/ 500;
-    ec > 20 ? ec = 20 : ec = ec;
-    print("Ec" + ec.toString());
 
-    if (int.parse(temp) >= 35) {
-      temp = "0";
-    } else if (int.parse(temp) > 27 && int.parse(temp) < 35) {
-      temp = "1";
-    } else {
-      temp = "2";
-    }
+    if (check()) {
+      ec = ec ~/ 500;
+      ec > 20 ? ec = 20 : ec = ec;
+      print("Ec" + ec.toString());
 
-    if (growth == "Initial") {
-      growth_stage = "0";
-    } else if (growth == "Mid") {
-      growth_stage = "1";
-    } else {
-      growth_stage = "2";
-    }
+      if (int.parse(temp) >= 35) {
+        temp = "0";
+      } else if (int.parse(temp) > 27 && int.parse(temp) < 35) {
+        temp = "1";
+      } else {
+        temp = "2";
+      }
 
-    print(ec.toString());
-    Response res =
-        await http.post("https://major-project-mlmodel-api.herokuapp.com",
-            headers: {"Content-Type": "application/json"},
-            body: json.encode({
-              'EC': ec,
-              'Temp': temp,
-              'Moisture': moisture,
-              'Growth': growth_stage,
-            }));
+      if (growth == "Initial") {
+        growth_stage = "0";
+      } else if (growth == "Mid") {
+        growth_stage = "1";
+      } else {
+        growth_stage = "2";
+      }
 
-    if (res.statusCode == 200) {
-      print(res
-          .body); // complete by parsing the json body return into ExampleData object and return
-      //.................
-      setState(() {
-        if (mounted) {
-          this.iscalLoading = false;
-        }
-      });
-      Navigator.push(
-        ctx,
-        MaterialPageRoute(
-          builder: (context) => LeachingOut(
-            res.body,
+      print(ec.toString());
+      Response res =
+          await http.post("https://major-project-mlmodel-api.herokuapp.com",
+              headers: {"Content-Type": "application/json"},
+              body: json.encode({
+                'EC': ec,
+                'Temp': temp,
+                'Moisture': moisture,
+                'Growth': growth_stage,
+              }));
+
+      if (res.statusCode == 200) {
+        print(res
+            .body); // complete by parsing the json body return into ExampleData object and return
+        //.................
+        setState(() {
+          if (mounted) {
+            this.iscalLoading = false;
+          }
+        });
+        Navigator.push(
+          ctx,
+          MaterialPageRoute(
+            builder: (context) => LeachingOut(
+              res.body,
+            ),
           ),
-        ),
-      );
+        );
+      } else {
+        print(res.statusCode);
+        print("Failed to get Data");
+        setState(() {
+          if (mounted) {
+            this.iscalLoading = false;
+          }
+        });
+      }
     } else {
-      print(res.statusCode);
-      print("Failed to get Data");
       setState(() {
         if (mounted) {
           this.iscalLoading = false;
@@ -227,7 +261,14 @@ class _FarmerHomeState extends State<FarmerHome> {
                           ),
                           title: Text('Contact Us',
                               style: TextStyle(fontSize: 19)),
-                          onTap: () => {Navigator.of(context).pop()},
+                          onTap: () => {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ContactUS(),
+                              ),
+                            )
+                          },
                         ),
                         ListTile(
                           leading: Icon(
@@ -236,7 +277,7 @@ class _FarmerHomeState extends State<FarmerHome> {
                             color: Color.fromRGBO(83, 131, 150, 1),
                           ),
                           title: Text('Logout', style: TextStyle(fontSize: 19)),
-                          onTap: () => {Navigator.of(context).pop()},
+                          onTap: () => logout(),
                         ),
                       ],
                     ),
@@ -278,7 +319,7 @@ class _FarmerHomeState extends State<FarmerHome> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(5.0),
-                                child: Text("Manage all things at one place",
+                                child: Text("Find Leaching with just a click",
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 16)),
                               )
@@ -309,34 +350,40 @@ class _FarmerHomeState extends State<FarmerHome> {
                                         ),
                                         SizedBox(
                                             width: 75,
-                                            child: TextFormField(
-                                              cursorColor: Colors.black,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              textAlign: TextAlign.center,
-                                              onChanged: (input) => {
-                                                print(input),
-                                                print(ec),
-                                                ec = num.tryParse(input)
-                                              },
-                                              //onSaved: (input) =>
-                                              // ec = num.tryParse(input),
-                                              decoration: new InputDecoration(
-                                                  border: InputBorder.none,
-                                                  focusedBorder:
-                                                      InputBorder.none,
-                                                  enabledBorder:
-                                                      InputBorder.none,
-                                                  errorBorder: InputBorder.none,
-                                                  disabledBorder:
-                                                      InputBorder.none,
-                                                  contentPadding:
-                                                      EdgeInsets.only(
-                                                          left: 0,
-                                                          bottom: 11,
-                                                          top: 11,
-                                                          right: 10),
-                                                  hintText: "Enter EC"),
+                                            child: Form(
+                                              key: _formKey,
+                                              child: TextFormField(
+                                                cursorColor: Colors.black,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                textAlign: TextAlign.center,
+                                                onChanged: (input) =>
+                                                    {ec = num.tryParse(input)},
+                                                validator: (String value) {
+                                                  return (value.length == 0)
+                                                      ? 'EC cannot be blank'
+                                                      : null;
+                                                },
+                                                //onSaved: (input) =>
+                                                // ec = num.tryParse(input),
+                                                decoration: new InputDecoration(
+                                                    border: InputBorder.none,
+                                                    focusedBorder:
+                                                        InputBorder.none,
+                                                    enabledBorder:
+                                                        InputBorder.none,
+                                                    errorBorder:
+                                                        InputBorder.none,
+                                                    disabledBorder:
+                                                        InputBorder.none,
+                                                    contentPadding:
+                                                        EdgeInsets.only(
+                                                            left: 0,
+                                                            bottom: 11,
+                                                            top: 11,
+                                                            right: 10),
+                                                    hintText: "Enter EC"),
+                                              ),
                                             )),
                                       ],
                                     ),

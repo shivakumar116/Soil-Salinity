@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
 
 class Profile extends StatefulWidget {
   Profile({Key key}) : super(key: key);
@@ -30,6 +31,7 @@ class _ProfileState extends State<Profile> {
     });
 
     final FirebaseUser user = await firebase_auth.currentUser();
+
     DocumentSnapshot userdata =
         await Firestore.instance.collection("users").document(user.uid).get();
     username = userdata.data['name'];
@@ -39,6 +41,12 @@ class _ProfileState extends State<Profile> {
     setState(() {
       isMainLoading = false;
     });
+  }
+
+  sendpasswordlink() async {
+    await firebase_auth.sendPasswordResetEmail(email: email);
+    Toast.show("Password Reset Link has been mailed", context,
+        duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
   }
 
   @override
@@ -157,7 +165,26 @@ class _ProfileState extends State<Profile> {
                         ),
                         Divider(
                           color: Colors.black45,
-                        )
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        ElevatedButton(
+                            onPressed: () => sendpasswordlink(),
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Color.fromRGBO(83, 131, 150, 1)),
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                              child: Text(
+                                "Change Passsword",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ))
                       ],
                     )
                   ],

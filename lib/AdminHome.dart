@@ -1,8 +1,10 @@
 import 'dart:ui';
 
 import 'package:Soil_Salinity/AddUser.dart';
+import 'package:Soil_Salinity/LoginPage.dart';
 import 'package:Soil_Salinity/ManageSensors.dart';
 import 'package:Soil_Salinity/ManageUsers.dart';
+import 'package:Soil_Salinity/viewtickets.dart';
 import 'package:flutter/material.dart';
 
 class AdminHome extends StatefulWidget {
@@ -59,6 +61,15 @@ class _AdminHomeState extends State<AdminHome> {
     );
   }
 
+  logout() async {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginPage(),
+      ),
+    );
+  }
+
   pushtohomesupport() {
     Navigator.push(
       context,
@@ -74,20 +85,74 @@ class _AdminHomeState extends State<AdminHome> {
         return new Future(() => false);
       },
       child: Scaffold(
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              Container(
+                height: 185,
+                child: DrawerHeader(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 28,
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            icon: Icon(
+                              Icons.person,
+                              size: 40,
+                            ),
+                            color: Colors.blue[300],
+                            onPressed: () {},
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Admin",
+                          style: TextStyle(color: Colors.white, fontSize: 24),
+                        ),
+                      ],
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.blue[300],
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.home_outlined,
+                  size: 32,
+                  color: Colors.black,
+                ),
+                title: Text('Home',
+                    style: TextStyle(
+                      fontSize: 19,
+                    )),
+                onTap: () => {Navigator.of(context).pop()},
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.exit_to_app,
+                  size: 29,
+                  color: Colors.black,
+                ),
+                title: Text('Logout', style: TextStyle(fontSize: 19)),
+                onTap: () => logout(),
+              ),
+            ],
+          ),
+        ),
         appBar: AppBar(
-          automaticallyImplyLeading: false,
           title: Center(child: Text("")),
           backgroundColor: Colors.black,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: Icon(
-                Icons.person_sharp,
-                color: Colors.white,
-                size: 25,
-              ),
-            )
-          ],
         ),
         body: SingleChildScrollView(
           child: Center(
@@ -291,6 +356,14 @@ class _AdminHomeState extends State<AdminHome> {
                       ),
                     ),
                     GestureDetector(
+                      onTap: () => {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ViewTickets(),
+                          ),
+                        ),
+                      },
                       child: Card(
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
